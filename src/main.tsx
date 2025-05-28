@@ -7,13 +7,12 @@ import App from "./App.tsx";
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
 		<AuthProvider
-			authority=""
-			client_id=""
-			redirect_uri=""
-			post_logout_redirect_uri=""
+			authority="http://localhost:7080/realms/master/account/"
+			client_id="account"
+			redirect_uri="http://localhost:5173"
 			resource={[]}
-			scope=""
-			metadata={{}}
+			scope="openid profile email"
+			extraQueryParams={{ data: "test", state: false, code: 1234 }}
 		>
 			<App />
 		</AuthProvider>
