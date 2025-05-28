@@ -25,70 +25,73 @@ yarn install
 
 ---
 
-## ⚙️ Configuración de Autenticación OIDC
+---
 
-Antes de iniciar la aplicación, **debes completar la configuración del `AuthProvider` en `main.tsx` o `main.jsx`**.
+## 🛠️ Configuración del Cliente en Keycloak
 
-Abre `src/main.tsx` y completa los siguientes campos:
+### 🧭 Ingresá al panel de administración de Keycloak
+
+```
+http://localhost:7080/admin
+```
+
+1. **Iniciá sesión** como administrador.
+2. Seleccioná el **Realm** donde querés crear el cliente (por ejemplo, `master` o uno personalizado).
+3. Andá al menú lateral: **Clients** → Clic en **Create client**.
+
+---
+
+### ✅ Paso 1: Crear cliente
+
+| Campo                 | Valor                            |
+| --------------------- | -------------------------------- |
+| **Client type**       | `OpenID Connect`                 |
+| **Client ID**         | `react-client`                   |
+| **Name** _(opcional)_ | `React Frontend App`             |
+| **Client protocol**   | `openid-connect` _(por defecto)_ |
+| **Root URL**          | `http://localhost:5173`          |
+
+✔️ Presioná **Next**
+
+---
+
+### ✅ Paso 2: Configuración general
+
+| Campo                            | Valor                                      |
+| -------------------------------- | ------------------------------------------ |
+| **Client authentication**        | ❌ Desactivado (sin secret)                |
+| **Authorization**                | ❌ Desactivado (si no usás políticas RBAC) |
+| **Standard Flow Enabled**        | ✅ Activado (para login con redirect)      |
+| **Direct Access Grants Enabled** | ❌ (seguro para frontend)                  |
+| **Root URL**                     | `http://localhost:5173`                    |
+| **Valid Redirect URIs**          | `http://localhost:5173/*`                  |
+| **Web Origins**                  | `http://localhost:5173`                    |
+| **Post Logout Redirect URIs**    | `http://localhost:5173`                    |
+
+✔️ Presioná **Save**
+
+### 🧪 Paso 3: Probar la conexión
+
+Con esta configuración, podés usar en React la siguiente configuración en `AuthProvider`:
 
 ```tsx
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import App from "./App";
-import { AuthProvider } from "react-oidc-context";
-
-createRoot(document.getElementById("root")!).render(
-	<StrictMode>
-		<AuthProvider
-			authority="http://localhost:7080/realms/<tu-realm>"
-			client_id="<tu-client-id>"
-			redirect_uri="http://localhost:5173"
-			post_logout_redirect_uri="http://localhost:5173"
-			resource={[]}
-			scope="openid profile email"
-			extraQueryParams={{ data: "test", state: false, code: 1234 }}
-		>
-			<App />
-		</AuthProvider>
-	</StrictMode>
-);
+<AuthProvider
+	authority="http://localhost:7080/realms/master"
+	client_id="react-client"
+	redirect_uri="http://localhost:5173"
+	post_logout_redirect_uri="http://localhost:5173"
+	scope="openid profile email"
+>
+	<App />
+</AuthProvider>
 ```
-
-🔧 **Asegúrate de reemplazar:**
-
-- `<tu-realm>`: el nombre de tu Realm en Keycloak
-- `<tu-client-id>`: el Client ID registrado en Keycloak
-
-📌 También asegúrate de que en Keycloak:
-
-- El **Client** tenga `http://localhost:5173` en:
-
-  - **Redirect URIs**
-  - **Web Origins**
 
 ---
 
-## 🧪 Ejecución en Desarrollo
+## 🧠 Consejos
 
-Para iniciar el servidor de desarrollo:
-
-```bash
-npm run dev
-# o
-yarn dev
-```
-
-La aplicación estará disponible en [http://localhost:5173](http://localhost:5173)
+- Si usás otro realm, cambiá `master` por el nombre correcto en todos los endpoints.
+- No uses `localhost` en producción. Usá dominios seguros con HTTPS.
+- En producción, evitá exponer `public` clients sin protección backend.
 
 ---
-
-## 🗂 Estructura Principal
-
-```
-├── src/
-│   ├── main.tsx         # Punto de entrada con AuthProvider
-│   ├── App.tsx          # Componente principal
-│   └── ...
-├── vite.config.ts       # Configuración de Vite
-└── README.md
-```

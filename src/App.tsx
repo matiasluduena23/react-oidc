@@ -32,10 +32,15 @@ function App() {
 			<h1>oidc</h1>
 			{auth.isAuthenticated ? (
 				<div>
-					<p>Access Token: {access_token}</p>
-					<p>Refresh Token: {refresh_token}</p>
-					<p>ID Token: {id_token}</p>
-					<p>Expires At: {expires_at?.toString()}</p>
+					<p>Access Token: </p>
+					<div className="wrapper">{access_token}</div>
+					<p>Refresh Token: </p>
+					<div className="wrapper">{refresh_token}</div>
+					<p>ID Token: </p>
+					<div className="wrapper">{id_token}</div>
+
+					<p>Expires At: </p>
+					<div className="wrapper">{expires_at?.toString()}</div>
 				</div>
 			) : (
 				<h2>You are not authenticated</h2>
