@@ -1,7 +1,3 @@
-Perfecto, gracias por el detalle. Basado en ese fragmento de código, actualizo el `README.md` para que el desarrollador sepa **exactamente qué campos debe completar** dentro del `AuthProvider` en `main.tsx` o `main.jsx`.
-
----
-
 ````markdown
 # React + Vite + OIDC Auth
 
@@ -50,17 +46,7 @@ createRoot(document.getElementById("root")!).render(
 			post_logout_redirect_uri="http://localhost:5173"
 			resource={[]}
 			scope="openid profile email"
-			metadata={{
-				issuer: "http://localhost:7080/realms/<tu-realm>",
-				authorization_endpoint:
-					"http://localhost:7080/realms/<tu-realm>/protocol/openid-connect/auth",
-				token_endpoint:
-					"http://localhost:7080/realms/<tu-realm>/protocol/openid-connect/token",
-				userinfo_endpoint:
-					"http://localhost:7080/realms/<tu-realm>/protocol/openid-connect/userinfo",
-				end_session_endpoint:
-					"http://localhost:7080/realms/<tu-realm>/protocol/openid-connect/logout",
-			}}
+			extraQueryParams={{ data: "test", state: false, code: 1234 }}
 		>
 			<App />
 		</AuthProvider>
