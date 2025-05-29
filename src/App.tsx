@@ -1,5 +1,6 @@
 import { useAuth } from "react-oidc-context";
 import "./App.css";
+import { NavLink } from "react-router";
 
 function App() {
 	const auth = useAuth();
@@ -16,35 +17,28 @@ function App() {
 			</div>
 		);
 	}
-	if (!auth.user) {
-		return (
-			<div>
-				<h1>Not authenticated</h1>
-				<button onClick={() => auth.signinRedirect()}>Sign In</button>
-			</div>
-		);
-	}
-
-	const { access_token, refresh_token, id_token, expires_at } = auth.user;
 
 	return (
 		<>
 			<h1>oidc</h1>
 			{auth.isAuthenticated ? (
+				<h1> Tu sesión esta activa.</h1>
+			) : (
+				<h1>No hay sesión activa</h1>
+			)}
+			{auth.isAuthenticated ? (
 				<div>
-					<p>Access Token: </p>
-					<div className="wrapper">{access_token}</div>
-					<p>Refresh Token: </p>
-					<div className="wrapper">{refresh_token}</div>
-					<p>ID Token: </p>
-					<div className="wrapper">{id_token}</div>
-
-					<p>Expires At: </p>
-					<div className="wrapper">{expires_at?.toString()}</div>
+					<button onClick={() => auth.signoutRedirect()}>Cerrar sesión</button>
 				</div>
 			) : (
-				<h2>You are not authenticated</h2>
+				<div>
+					<button onClick={() => auth.signinRedirect()}>Iniciar sesión</button>
+				</div>
 			)}
+
+			<div style={{ marginTop: "20px" }}>
+				<NavLink to="/panel">Ir al panel</NavLink>
+			</div>
 		</>
 	);
 }
